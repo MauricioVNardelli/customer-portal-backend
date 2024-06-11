@@ -17,7 +17,7 @@ model users {
   name String
   email String
   password String
-  role Type_Role @default(USER)
+  role type_role @default(USER)
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
@@ -25,7 +25,7 @@ model users {
   @@map("users")
 }
 
-enum Type_Role {
+enum type_role {
   ADMIN
   USER
 }

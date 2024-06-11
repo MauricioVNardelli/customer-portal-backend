@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { DetailEnumController } from './controllers/enum/DetailEnumController';
+import { EnumController } from './controllers/EnumController';
 
 import { CreateUserController, DetailUserController } from './controllers/UserController';
 import { AuthUserController } from './controllers/AuthUserController';
@@ -16,6 +16,6 @@ router.post('/user', isAuthenticated, new CreateUserController().handle)
 router.get('/user', isAuthenticated, new DetailUserController().handle)
 
 //--Enum
-router.get('/enum', isAuthenticated, new DetailEnumController().handle);
+router.get('/enum', isAuthenticated, new EnumController().handle);
 
 export { router };
