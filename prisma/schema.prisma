@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//How to create a migration: npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL") // uses connection pooling
+}
+
+model users {
+  id String @id @default(uuid())
+  name String
+  email String
+  password String
+  role Type_Role @default(USER)
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+  
+  @@map("users")
+}
+
+enum Type_Role {
+  ADMIN
+  USER
+}
