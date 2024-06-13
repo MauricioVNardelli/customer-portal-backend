@@ -1,35 +1,14 @@
+import { IUserBody } from '../lib/definitions';
 import prismaClient from '../prisma';
 import { hash } from 'bcryptjs';
 
-interface UserRequest {
-  name: string
-  email: string
-  password: string
-}
-
-class CreateUserService {  
-  async execute({name, email, password}: UserRequest) {
-    
-    if(!email) {
-      throw new Error("E-mail incorreto");
-    }
-
-    const userAlreadyExists = await prismaClient.users.findFirst({
-      where: {
-        email: email
-      }
-    })
-
-    if (userAlreadyExists) {
-      throw new Error("Usuário já cadastrado")
-    }
-
+export class CreateUserService {  
+  async execute({ password, ...user }: IUserBody) {
     const passwordHash = await hash(password, 8);
 
-    const user = await prismaClient.users.create({
+    return await prismaClient.users.create({
       data: {
-        name: name,
-        email: email,
+        ...user,
         password: passwordHash,        
       },
       select: {
@@ -38,17 +17,15 @@ class CreateUserService {
         email: true
       }
     })
-
-    return user;
   }
 }
 
-class DetailUserService {
-  async execute(id: string) {
+export class DetailUserService {
+  async execute(prId: string) {
     
-    if (id) {
+    if (prId) {
       return await prismaClient.users.findFirst({
-        where: { id: id  } 
+        where: { id: prId  } 
       })
     }
 
@@ -56,4 +33,18 @@ class DetailUserService {
   }
 }
 
-export { CreateUserService, DetailUserService }
+export class UpdateUserService {
+  async execute(prId: string, { password, ...user }: IUserBody) {
+    const passwordHash = await hash(password, 8);
+
+    return await prismaClient.users.update({
+      where: {
+        id: prId
+      },
+      data: {
+        ...user,
+        update_at: new Date()
+      }
+    })
+  }
+}
