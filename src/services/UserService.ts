@@ -35,7 +35,11 @@ export class DetailUserService {
 
 export class UpdateUserService {
   async execute(prId: string, { password, ...user }: IUserBody) {
-    const passwordHash = await hash(password, 8);
+    
+    let passwordHash = password;
+
+    if (password.length < 30)
+      passwordHash = await hash(password, 8);
 
     return await prismaClient.users.update({
       where: {
@@ -43,6 +47,7 @@ export class UpdateUserService {
       },
       data: {
         ...user,
+        password: passwordHash,
         update_at: new Date()
       }
     })
