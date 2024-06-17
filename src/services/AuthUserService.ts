@@ -27,15 +27,12 @@ class AuthUserService {
     }
 
     const token = sign(
-      { name: user.name, email: user.email }, 
+      { id: user.id, name: user.name, email: user.email, password: user.password, role: user.role }, 
       process.env.JWT_SECRET, 
       { expiresIn: '30d', subject: user.id.toString() }
     );
 
     return {
-      id: user.id,
-      name: user.name,
-      email: email,
       token: token
     };
   }
