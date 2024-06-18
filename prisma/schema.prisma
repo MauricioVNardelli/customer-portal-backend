@@ -18,6 +18,7 @@ model users {
   email String
   password String
   role type_role @default(USER)
+  cpfcnpj String?
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
