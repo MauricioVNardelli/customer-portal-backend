@@ -26,7 +26,7 @@ export class DetailContractService {
   }
 
   async getPDFContract() {
-    const fileBase64 = fs.readFileSync('src/lib/files/file1.pdf', {encoding: 'base64'});
+    const fileBase64 = fs.readFileSync('public/files/file1.pdf', {encoding: 'base64'});
 
     return {
       fileBase64: fileBase64
