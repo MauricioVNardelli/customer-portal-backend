@@ -13,20 +13,36 @@ datasource db {
 }
 
 model users {
-  id String @id @default(uuid())
-  name String
-  email String
-  password String
-  role type_role @default(USER)
-  cpfcnpj String?
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  role      type_role @default(USER)
+  cpfcnpj   String?
+  status_id  String
+  status     status    @relation(fields: [status_id], references: [id])
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
-  
+
   @@map("users")
+}
+
+model status {
+  id     String       @id @default(uuid())
+  status status_enum  @default(ATIVO)
+
+  users  users[]
+
+  @@map("status")
 }
 
 enum type_role {
   ADMIN
   USER
+}
+
+enum status_enum {
+  ATIVO
+  DESATIVADO
 }
