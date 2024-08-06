@@ -1,3 +1,5 @@
+import { status_enum } from "@prisma/client";
+import { UpdateUserDTO } from "../controllers/UserController";
 import { IUserBody } from "../lib/definitions";
 import prismaClient from "../prisma";
 import { hash } from "bcryptjs";
@@ -66,8 +68,23 @@ export class DetailUserService {
 }
 
 export class UpdateUserService {
-  async execute(prId: string, user: IUserBody) {
+  async execute(prId: string, user: UpdateUserDTO) {
     const data: any = { ...user, update_at: new Date() };
+
+    if (user.status) {
+      const status = await prismaClient.status.findFirst({
+        where: {
+          status: user.status as status_enum,
+        },
+      });
+
+      if (!status) {
+        throw new Error("Status não encontrado");
+      }
+
+      data.status_id = status.id;
+      delete data.status;
+    }
 
     if (user.password) {
       data.password =
@@ -78,6 +95,9 @@ export class UpdateUserService {
 
     return await prismaClient.users.update({
       where: { id: prId },
+      include: {
+        status: true,
+      },
       data,
     });
   }

@@ -17,8 +17,8 @@ router.post("/session", new AuthUserController().handle);
 
 //-- users
 router.post("/user", isAuthenticated, new CreateUserController().handle);
-router.get("/user", new DetailUserController().handle);
-router.put("/user", new UpdateUserController().handle);
+router.get("/user", isAuthenticated, new DetailUserController().handle);
+router.put("/user", isAuthenticated, new UpdateUserController().handle);
 
 //-- contracts
 router.get("/contract", isAuthenticated, new DetailContractController().handle);

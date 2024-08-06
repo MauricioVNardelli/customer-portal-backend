@@ -5,11 +5,19 @@ import {
   UpdateUserService,
 } from "../services/UserService";
 import prismaClient from "../prisma";
-import { users } from "@prisma/client";
-import { IUserBody } from "../lib/definitions";
+import { type_role, status_enum, users } from "@prisma/client";
 
 interface ReqQueryUser {
   id?: string;
+}
+
+export interface UpdateUserDTO {
+  role?: type_role;
+  name: string;
+  email: string;
+  password?: string;
+  status?: status_enum;
+  status_id?: string;
 }
 
 export class CreateUserController {
@@ -51,7 +59,7 @@ export class DetailUserController {
 export class UpdateUserController {
   async handle(req: Request, res: Response) {
     const query = req.query as ReqQueryUser;
-    const userData = req.body as IUserBody;
+    const userData = req.body as UpdateUserDTO;
 
     if (!query.id) {
       throw new Error("ID não enviado");
