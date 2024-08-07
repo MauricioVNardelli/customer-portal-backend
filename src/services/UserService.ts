@@ -50,7 +50,6 @@ export class CreateUserService {
 
 export class DetailUserService {
   async execute(prId: string) {
-<<<<<<< Updated upstream
     if (prId) {
       return await prismaClient.users.findFirst({
         where: { id: prId },
@@ -59,7 +58,7 @@ export class DetailUserService {
         },
       });
     }
-=======
+
     const users = prId
       ? await prismaClient.users.findFirst({
           where: { id: prId },
@@ -81,13 +80,8 @@ export class DetailUserService {
       status: user.status.status,
       company: user?.company?.name,
     }));
->>>>>>> Stashed changes
 
-    return await prismaClient.users.findMany({
-      include: {
-        status: true,
-      },
-    });
+    return prId ? formattedUsers[0] : formattedUsers;
   }
 }
 
