@@ -51,12 +51,19 @@ export class CreateUserService {
 export class DetailUserService {
   async execute(prId: string) {
     if (prId) {
-      return await prismaClient.users.findFirst({
+      const user = await prismaClient.users.findFirst({
         where: { id: prId },
         include: {
           status: true,
+          company: true,
         },
       });
+
+      return {
+        ...user,
+        status: user.status?.status,
+        company: user.company?.name,
+      };
     }
 
     const users = prId
