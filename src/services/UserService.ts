@@ -50,20 +50,26 @@ export class CreateUserService {
 
 export class DetailUserService {
   async execute(prId: string) {
-    if (prId) {
-      return await prismaClient.users.findFirst({
-        where: { id: prId },
-        include: {
-          status: true,
-        },
-      });
-    }
+    const users = prId
+      ? await prismaClient.users.findFirst({
+          where: { id: prId },
+          include: {
+            status: true,
+          },
+        })
+      : await prismaClient.users.findMany({
+          include: {
+            status: true,
+          },
+        });
 
-    return await prismaClient.users.findMany({
-      include: {
-        status: true,
-      },
-    });
+    const usersArray = Array.isArray(users) ? users : [users];
+    const formattedUsers = usersArray.map((user) => ({
+      ...user,
+      status: user.status.status,
+    }));
+
+    return prId ? formattedUsers[0] : formattedUsers;
   }
 }
 
