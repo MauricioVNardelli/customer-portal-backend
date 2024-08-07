@@ -7,3 +7,10 @@ export interface IUserBody {
   password: string;
   status_id: string;
 }
+
+export interface ICompanyBody {
+  code: number;
+  name: string;
+  image: string;
+  cnpj: string;
+}

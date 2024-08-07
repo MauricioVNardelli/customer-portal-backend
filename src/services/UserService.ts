@@ -50,6 +50,7 @@ export class CreateUserService {
 
 export class DetailUserService {
   async execute(prId: string) {
+<<<<<<< Updated upstream
     if (prId) {
       return await prismaClient.users.findFirst({
         where: { id: prId },
@@ -58,6 +59,29 @@ export class DetailUserService {
         },
       });
     }
+=======
+    const users = prId
+      ? await prismaClient.users.findFirst({
+          where: { id: prId },
+          include: {
+            status: true,
+            company: true,
+          },
+        })
+      : await prismaClient.users.findMany({
+          include: {
+            status: true,
+            company: true,
+          },
+        });
+
+    const usersArray = Array.isArray(users) ? users : [users];
+    const formattedUsers = usersArray.map((user) => ({
+      ...user,
+      status: user.status.status,
+      company: user?.company?.name,
+    }));
+>>>>>>> Stashed changes
 
     return await prismaClient.users.findMany({
       include: {
@@ -99,6 +123,14 @@ export class UpdateUserService {
         status: true,
       },
       data,
+    });
+  }
+}
+
+export class ListUsersByCompanyService {
+  async execute(prId: string) {
+    return await prismaClient.users.findMany({
+      where: { company_id: prId },
     });
   }
 }

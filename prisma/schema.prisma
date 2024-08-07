@@ -21,6 +21,8 @@ model users {
   cpfcnpj   String?
   status_id  String
   status     status    @relation(fields: [status_id], references: [id])
+  company_id String?     
+  company    company? @relation(fields: [company_id], references: [id])
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
@@ -45,4 +47,19 @@ enum type_role {
 enum status_enum {
   ATIVO
   DESATIVADO
+}
+
+model company {
+  id     String   @id @default(uuid())
+  code   Int      @default(autoincrement())
+  name   String
+  image  String?
+  cnpj   String
+  
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  users     users[]
+
+  @@map("company")
 }
