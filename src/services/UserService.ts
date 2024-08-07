@@ -111,13 +111,20 @@ export class UpdateUserService {
           : user.password;
     }
 
-    return await prismaClient.users.update({
+    const updatedUser = await prismaClient.users.update({
       where: { id: prId },
       include: {
         status: true,
+        company: true,
       },
       data,
     });
+
+    return {
+      ...updatedUser,
+      status: updatedUser.status?.status,
+      company: updatedUser.company?.name,
+    };
   }
 }
 
